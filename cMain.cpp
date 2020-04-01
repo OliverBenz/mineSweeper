@@ -5,12 +5,13 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 wxEND_EVENT_TABLE()
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "Main Window", wxPoint(50, 50), wxSize(800, 600)) {
-	// Create buttons and grid
+	// Create button array
 	btn = new wxButton** [nFieldHeight];
 	for (int i = 0; i < nFieldHeight; i++) {
 		btn[i] = new wxButton*[nFieldWidth];
 	}
 
+	// Create grid
 	wxGridSizer* grid = new wxGridSizer(nFieldWidth, nFieldHeight, 0, 0);
 
 	// Create mine field
@@ -21,6 +22,7 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "Main Window", wxPoint(50, 50), wxSi
 
 	wxFont font(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false);
 
+	// Fill button array, assign font, grid, event / init minefield
 	for (int i = 0; i < nFieldHeight; i++) {
 		for (int j = 0; j < nFieldWidth; j++) {
 			btn[i][j] = new wxButton(this, 10000 + (i * 100) + j);
@@ -43,6 +45,7 @@ cMain::~cMain() {
 }
 
 void cMain::OnButtonClicked(wxCommandEvent& evt) {
+	// Get button coordinates from button id
 	int x = (evt.GetId() - 10000) % 100;
 	int y = floor((evt.GetId() - 10000) / 100);
 	
@@ -110,6 +113,7 @@ void cMain::checkMines(int x, int y) {
 		btn[y][x]->SetLabel(std::to_string(mineCount));
 	}
 	else {
+		// Check and show surrounding fields
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				// See if surrounding mines are in the field

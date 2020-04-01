@@ -40,6 +40,10 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "Main Window", wxPoint(50, 50), wxSi
 }
 
 cMain::~cMain() {
+	for (int i = 0; i < nFieldHeight; i++) {
+		delete[] btn[i];
+		delete[] nField[i];
+	}
 	delete[] btn;
 	delete[] nField;
 }

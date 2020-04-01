@@ -10,10 +10,12 @@ public:
 public:
 	int nFieldWidth = 10;
 	int nFieldHeight = 10;
-	wxButton** btn;
+	wxButton*** btn;
 
-	int* nField = nullptr;
+	int** nField = nullptr;
 	bool bFirstClick = true;
+
+	void checkMines(int x, int y);
 
 	void OnButtonClicked(wxCommandEvent& evt);
 

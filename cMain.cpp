@@ -90,20 +90,19 @@ void cMain::OnButtonClicked(wxCommandEvent& evt) {
 			}
 		}
 	}
-	else {
+	else
 		checkMines(x, y);
-	}
 	evt.Skip();
 }
 
 void cMain::checkMines(int x, int y) {
 	btn[y][x]->Enable(false);
 
-	// Check surrounding mines and count mines
+	// Check surrounding fields and count mines
 	int mineCount = 0;
 	for (int i = -1; i < 2; i++) {
 		for (int j = -1; j < 2; j++) {
-			// See if surrounding mines are in the field
+			// See if surrounding fields are on screen
 			if (x + j >= 0 && x + j < nFieldWidth && y + i >= 0 && y + i < nFieldHeight) {
 				//Check if field has mine
 				if (nField[y + i][x + j] == -1) {
@@ -113,21 +112,13 @@ void cMain::checkMines(int x, int y) {
 		}
 	}
 
-	if (mineCount > 0) {
+	if (mineCount > 0)
 		btn[y][x]->SetLabel(std::to_string(mineCount));
-	}
 	else {
-		// Check and show surrounding fields
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
-				// See if surrounding mines are in the field
-				if (x + j >= 0 && x + j < nFieldWidth && y + i >= 0 && y + i < nFieldHeight) {
-					//Check if field has mine
-					if (btn[y+i][x+j]->IsEnabled()) {
-						checkMines(x + j, y + i);
-					}
-				}
-			}
-		}
+		// Check all surrounding enabled fields
+		for (int i = -1; i < 2; i++)
+			for (int j = -1; j < 2; j++)
+				if (x + j >= 0 && x + j < nFieldWidth && y + i >= 0 && y + i < nFieldHeight && btn[y + i][x + j]->IsEnabled())
+					checkMines(x + j, y + i);
 	}
 }

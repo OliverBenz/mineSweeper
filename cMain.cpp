@@ -55,9 +55,8 @@ void cMain::OnButtonClicked(wxCommandEvent& evt) {
 	
 	// Generate all mines at first click
 	if (bFirstClick) {
-		int mines = 20;
-
-		while (mines) {
+		int mineCount = mines;
+		while (mineCount) {
 			// Get random coordinate for each mine
 			int rx = rand() % nFieldWidth;
 			int ry = rand() % nFieldHeight;
@@ -66,7 +65,7 @@ void cMain::OnButtonClicked(wxCommandEvent& evt) {
 			// Check that the user has not clicked these coordinates yet
 			if (nField[ry][rx] == 0 && rx != x && ry != y) {
 				nField[ry][rx] = -1;
-				mines--;
+				mineCount--;
 			}
 		}
 
@@ -79,20 +78,30 @@ void cMain::OnButtonClicked(wxCommandEvent& evt) {
 	// Check if player hit mine
 	if (nField[y][x] == -1) {
 		wxMessageBox("Game over!");
+		resetGame();
+	}
+	fieldCount--;
+	
+	checkMines(x, y);
+	if (fieldCount == mines) {
+		wxMessageBox("You won!");
+		resetGame();
+	}
 
-		// Reset Game
-		bFirstClick = true;
-		for (int i = 0; i < nFieldHeight; i++) {
-			for (int j = 0; j < nFieldWidth; j++) {
-				nField[i][j] = 0;
-				btn[i][j]->SetLabel("");
-				btn[i][j]->Enable(true);
-			}
+	evt.Skip();
+}
+
+void cMain::resetGame() {
+	bFirstClick = true;
+	fieldCount = nFieldWidth * nFieldHeight;
+
+	for (int i = 0; i < nFieldHeight; i++) {
+		for (int j = 0; j < nFieldWidth; j++) {
+			nField[i][j] = 0;
+			btn[i][j]->SetLabel("");
+			btn[i][j]->Enable(true);
 		}
 	}
-	else
-		checkMines(x, y);
-	evt.Skip();
 }
 
 void cMain::checkMines(int x, int y) {
@@ -118,7 +127,9 @@ void cMain::checkMines(int x, int y) {
 		// Check all surrounding enabled fields
 		for (int i = -1; i < 2; i++)
 			for (int j = -1; j < 2; j++)
-				if (x + j >= 0 && x + j < nFieldWidth && y + i >= 0 && y + i < nFieldHeight && btn[y + i][x + j]->IsEnabled())
+				if (x + j >= 0 && x + j < nFieldWidth && y + i >= 0 && y + i < nFieldHeight && btn[y + i][x + j]->IsEnabled()) {
+					fieldCount--;
 					checkMines(x + j, y + i);
+				}
 	}
 }

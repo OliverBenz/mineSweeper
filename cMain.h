@@ -10,12 +10,15 @@ public:
 public:
 	int nFieldWidth = 10;
 	int nFieldHeight = 10;
+	int fieldCount = nFieldWidth * nFieldHeight;
+	int mines = 20;
 	wxButton*** btn;
 
 	int** nField = nullptr;
 	bool bFirstClick = true;
 
 	void checkMines(int x, int y);
+	void resetGame();
 
 	void OnButtonClicked(wxCommandEvent& evt);
 
